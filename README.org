@@ -1,0 +1,25 @@
+
+
+* Budgets exécutés dans les universités françaises en 2015
+
+
+
+source : http://www.performance-publique.budget.gouv.fr/sites/performance_publique/files/farandole/ressources/2017/pap/pdf/PAP2017_BG_Recherche_enseignement_superieur.pdf
+
+Légende :
+
+|---------------+-----------------------------------------------------------------------------------|
+| Colonne       | Intitulé                                                                          |
+|---------------+-----------------------------------------------------------------------------------|
+| RCE           | Année du passage aux RCE                                                          |
+| Établissement | Établissement                                                                     |
+| Roul          | Fonds de roulement en nombre de jours de fonctionnement                           |
+| Sub AE        | Subventions notifiées en AE en 2015 au titre des programmes 150 et 231 (en euros) |
+| Sub CP        | Subventions notifiées en CP en 2015 au titre des programmes 150 et 231 (en euros) |
+| ETPT          | ETPT notifiés en 2015                                                             |
+| RFonc         | Recettes Fonctionnement 2015                                                      |
+| RInv          | Recettes Investissement 2015                                                      |
+| DFonc         | Dépenses Fonctionnement 2015                                                      |
+| DInv          | Dépenses Investissement 2015                                                      |
+| étu           | Nombre total d'étudiants inscrits à la rentrée 2014-2015 (Source : SIES)          |
+|---------------+-----------------------------------------------------------------------------------|
