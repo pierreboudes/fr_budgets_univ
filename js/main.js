@@ -74,7 +74,7 @@ d3.csv('data/universites_budgets_2016_PAP2018.csv', function(data) {
   var xAxisOptions = ["Étudiant·e·s", "ETPT", "Recettes", "Recettes investissement", "Dépenses", "Dépenses investissement"];
   var yAxisOptions = ["Fonds de roulement",	"Subvention notifiée AE",	"Subvention notifiée CP", 	"ETPT",	"Recettes fonctionnement",	"Recettes investissement",	"Recettes",	"Dépenses fonctionnement",	"Dépenses investissement",	"Dépenses"];
   var descriptions = {
-    "Étudiant·e·s": "Nombre d'étudiant·e·s inscrit·e·s (SIES)",
+    "Étudiant·e·s": "Nombre d'étudiant·e·s inscrit·e·s (SISE)",
     "Fonds de roulement": "Fonds de roulement en jours",
     "Subvention notifiée AE": "Subvention notifiée AE k€",
     "Subvention notifiée CP": "Subvention notifiée CP k€",
