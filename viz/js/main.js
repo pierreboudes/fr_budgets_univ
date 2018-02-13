@@ -4,10 +4,13 @@ function parseData(d) {
   return _.map(d, function(d) {
     var o = {};
     _.each(keys, function(k) {
-      if( k == 'Université' )
+      if ( k == 'Université' || k == 'Nom') {
         o[k] = d[k];
-      else
+      } else if (["Subvention notifiée AE", "Subvention notifiée CP", "Recettes fonctionnement", "Recettes investissement", "Recettes", "Dépenses fonctionnement", "Dépenses investissement", "Dépenses"].indexOf(k) != -1) {
+        o[k] = Math.round(parseFloat(d[k])/1000);
+      } else {
         o[k] = parseFloat(d[k]);
+      }
     });
     return o;
   });
@@ -65,7 +68,7 @@ function getCorrelation(xArray, yArray) {
   return {r: r, m: m, b: b};
 }
 
-d3.csv('data/universites_budget2015.csv', function(data) {
+d3.csv('data/universites_budgets_2016_PAP2018.csv', function(data) {
   var yAxis = 'ETPT';
   var xAxis = 'Étudiant·e·s';
   var xAxisOptions = ["Étudiant·e·s", "ETPT", "Recettes", "Recettes investissement", "Dépenses", "Dépenses investissement"];
@@ -78,7 +81,7 @@ d3.csv('data/universites_budget2015.csv', function(data) {
     "ETPT": "Emplois notifiés en équivalents temps pleins",
     "Recettes fonctionnement": "Recettes fonctionnement k€",
     "Recettes investissement": "Recettes investissement k€",
-    "Recettes": "Recettes",
+    "Recettes": "Recettes k€",
     "Dépenses fonctionnement": "Dépenses en fonctionnement k€",
     "Dépenses investissement": "Dépenses en investissement k€",
     "Dépenses": "Dépenses k€"
@@ -130,10 +133,10 @@ d3.csv('data/universites_budget2015.csv', function(data) {
       updateMenus();
     });
 
-  // Country name
+  // university name
   d3.select('svg g.chart')
     .append('text')
-    .attr({'id': 'countryLabel', 'x': 0, 'y': 170})
+    .attr({'id': 'nomuniversite', 'x': 0, 'y': 170})
     .style({'font-size': '50px', 'font-weight': 'bold', 'fill': '#ccc'});
 
   // Best fit line (to appear behind points)
@@ -156,32 +159,46 @@ d3.csv('data/universites_budget2015.csv', function(data) {
   // Render points
   updateScales();
   var pointColour = d3.scale.category20b();
-  d3.select('svg g.chart')
-    .selectAll('circle')
+  var elemEnter = d3.select('svg g.chart')
+      .selectAll('g labeledcircle')
+      .data(data)
+      .enter();
+  var elemEnterg = elemEnter.append("g")
+      .classed('labeledcircle', true)
+      .attr('transform', function(d) {
+        var x = isNaN(d[xAxis]) ? d3.select(this).attr('x') : xScale(d[xAxis]);
+        var y = isNaN(d[yAxis]) ? d3.select(this).attr('y') : yScale(d[yAxis]);
+        return 'translate('+x+','+y+')';
+      });
+
+    var elemEnterc = elemEnterg.append('circle')
+        .attr('fill', function(d, i) {return pointColour(i);})
+        .attr('r',6)
+      .style('cursor', 'pointer')
+      .on('mouseover', function(d) {
+        d3.select('svg g.chart #nomuniversite')
+          .text(d.Université)
+          .transition()
+          .style('opacity', 1);
+      })
+      .on('mouseout', function(d) {
+        d3.select('svg g.chart #nomuniversite')
+          .transition()
+          .duration(1500)
+          .style('opacity', 0);
+      });
+  /*
+  var elemEntert = elemEnterg.append('text')
+      .classed('nomuniv', true)
+      .text(function(d) {return d.Nom;});
+*/
+    d3.select('svg g.chart')
+    .selectAll('text')
     .data(data)
     .enter()
-    .append('circle')
-    .attr('cx', function(d) {
-      return isNaN(d[xAxis]) ? d3.select(this).attr('cx') : xScale(d[xAxis]);
-    })
-    .attr('cy', function(d) {
-      return isNaN(d[yAxis]) ? d3.select(this).attr('cy') : yScale(d[yAxis]);
-    })
-    .attr('fill', function(d, i) {return pointColour(i);})
-    .style('cursor', 'pointer')
-    .on('mouseover', function(d) {
-      d3.select('svg g.chart #countryLabel')
-        .text(d.Université)
-        .transition()
-        .style('opacity', 1);
-    })
-    .on('mouseout', function(d) {
-      d3.select('svg g.chart #countryLabel')
-        .transition()
-        .duration(1500)
-        .style('opacity', 0);
-    });
-
+    .append('text')
+    .attr('stroke', function(d, i) {return pointColour(i);})
+    .text(function(d) {return d.Nom;});
   updateChart(true);
   updateMenus();
 
@@ -205,18 +222,14 @@ d3.csv('data/universites_budget2015.csv', function(data) {
     updateScales();
 
     d3.select('svg g.chart')
-      .selectAll('circle')
+      .selectAll('g.labeledcircle')
       .transition()
       .duration(500)
       .ease('quad-out')
-      .attr('cx', function(d) {
-        return isNaN(d[xAxis]) ? d3.select(this).attr('cx') : xScale(d[xAxis]);
-      })
-      .attr('cy', function(d) {
-        return isNaN(d[yAxis]) ? d3.select(this).attr('cy') : yScale(d[yAxis]);
-      })
-      .attr('r', function(d) {
-        return isNaN(d[xAxis]) || isNaN(d[yAxis]) ? 0 : 6;
+      .attr('transform', function(d) {
+        var x = isNaN(d[xAxis]) ? d3.select(this).attr('x') : xScale(d[xAxis]);
+        var y = isNaN(d[yAxis]) ? d3.select(this).attr('y') : yScale(d[yAxis]);
+        return 'translate('+x+','+y+')';
       });
 
     // Also update the axes
@@ -286,4 +299,5 @@ d3.csv('data/universites_budget2015.csv', function(data) {
     });
   }
 
-})
+}
+      )
